@@ -39,6 +39,7 @@ function ToDoList({
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [dueDate, setDueDate] = useState<string>("");
   const [dateOption, setDateOption] = useState<string>("");
+  const [isComposing, setIsComposing] = useState(false); // 跟踪是否正在进行输入法组合
 
   // Set the proper droppable ID
   const droppableId = category ? `category-${category}` : "todolist";
@@ -181,8 +182,15 @@ function ToDoList({
                 category ? CATEGORY_META[category].label : ""
               }任务...`}
               onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) addTask();
+                if (e.key === "Enter" && !e.shiftKey && !isComposing) {
+                  e.preventDefault();
+                  if (newTaskTitle.trim()) {
+                    addTask();
+                  }
+                }
               }}
+              onCompositionStart={() => setIsComposing(true)}
+              onCompositionEnd={() => setIsComposing(false)}
             />
             <div className="flex gap-2 items-center">
               <div className="flex flex-wrap gap-2 flex-1 text-gray-700">

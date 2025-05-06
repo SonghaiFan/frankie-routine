@@ -103,9 +103,10 @@ function GridCard({ categories, description, detail, number }: GridCardProps) {
         }}
       >
         <div
-          className={`text-3xl font-bold mb-1 ${textColorClass}`}
+          className={`text-3xl font-bold mb-1 ${textColorClass} flex items-center gap-2`}
           onClick={(e) => e.stopPropagation()}
         >
+          <span className="text-3xl mr-1">{categoryMeta.icon}</span>
           {categoryMeta.label}
         </div>
         <div
