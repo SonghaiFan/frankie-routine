@@ -18,7 +18,7 @@ interface ToDoListProps {
   customTasks?: Task[];
   customSetTasks?: React.Dispatch<React.SetStateAction<Task[]>>;
   showAddTaskForm?: boolean;
-  isInModal?: boolean;
+  showTitle?: boolean;
 }
 
 function ToDoList({
@@ -28,7 +28,7 @@ function ToDoList({
   customTasks,
   customSetTasks,
   showAddTaskForm = true,
-  isInModal = false,
+  showTitle = true,
 }: ToDoListProps) {
   const contextValue = useContext(ToDoContext);
 
@@ -42,7 +42,7 @@ function ToDoList({
 
   // Set the proper droppable ID
   const droppableId = category ? `category-${category}` : "todolist";
-  console.log("ToDoList droppable ID:", droppableId, "category:", category);
+  // console.log("ToDoList droppable ID:", droppableId, "category:", category);
   const { setNodeRef, isOver } = useDroppable({ id: droppableId });
 
   // Helper functions for preset dates
@@ -151,25 +151,20 @@ function ToDoList({
     (task) => task.isCompleted
   ).length;
 
+  // Find the active task for the overlay
+  const activeTask = activeId
+    ? tasks.find((task) => task.id === activeId)
+    : null;
+
   return (
     <div
       ref={setNodeRef}
-      className={`bg-white rounded-xl flex flex-col h-full transition-all duration-300
-        ${
-          isOver && !isInModal
-            ? "ring-4 ring-offset-2 ring-yellow-400 bg-yellow-50"
-            : ""
-        }`}
+      className={`bg-white rounded-xl flex flex-col h-full transition-all duration-300 overflow-hidden
+        ${isOver ? "ring-4 ring-offset-2 ring-yellow-400 bg-yellow-50" : ""}`}
     >
       {showAddTaskForm && (
-        <div
-          className={`${isInModal ? "" : "sticky top-0 z-10"} bg-white ${
-            isInModal
-              ? "pb-6"
-              : "p-8 pb-6 rounded-t-xl border-b border-gray-100"
-          }`}
-        >
-          {!isInModal && (
+        <div className="sticky top-0 z-10 bg-white p-8 pb-6 rounded-t-xl border-b border-gray-100 flex-shrink-0">
+          {showTitle && (
             <h2 className="text-2xl font-bold mb-8 text-gray-900">待办事项</h2>
           )}
           <div className="flex flex-col space-y-3">
@@ -303,8 +298,8 @@ function ToDoList({
           </div>
         </div>
       )}
-      <div className={`${isInModal ? "" : "flex-1 p-8 pt-4"}`}>
-        {isInModal && displayedTasks.length > 0 && (
+      <div className="flex-1 p-8 pt-4 overflow-y-auto min-h-0">
+        {!showTitle && displayedTasks.length > 0 && (
           <div className="flex justify-between items-center mb-4">
             <h3 className="font-medium text-gray-700">任务列表</h3>
             <div className="text-sm text-gray-500">
@@ -328,7 +323,7 @@ function ToDoList({
                     className="flex-1"
                     onDelete={deleteTask}
                     onToggleComplete={toggleTaskComplete}
-                    isDraggable={!isInModal}
+                    isDraggable={true}
                   />
                 </li>
               ))}
@@ -347,35 +342,27 @@ function ToDoList({
           )}
         </SortableContext>
       </div>
-      {!isInModal && (
-        <DragOverlay
-          dropAnimation={{
-            sideEffects: defaultDropAnimationSideEffects({
-              styles: {
-                active: {
-                  opacity: "0.5",
-                },
+      <DragOverlay
+        dropAnimation={{
+          sideEffects: defaultDropAnimationSideEffects({
+            styles: {
+              active: {
+                opacity: "0.5",
               },
-            }),
-          }}
-        >
-          {activeId != null
-            ? (() => {
-                const task = tasks.find((t) => t.id === activeId);
-                if (!task) return null;
-                return (
-                  <TaskChip
-                    key={task.id}
-                    task={task}
-                    isOverlay
-                    overId={typeof overId === "string" ? overId : null}
-                    className="transform transition-all duration-200 scale-105"
-                  />
-                );
-              })()
-            : null}
-        </DragOverlay>
-      )}
+            },
+          }),
+        }}
+      >
+        {activeTask && (
+          <TaskChip
+            key={activeTask.id}
+            task={activeTask}
+            isOverlay
+            overId={typeof overId === "string" ? overId : null}
+            className="transform transition-all duration-200 scale-105"
+          />
+        )}
+      </DragOverlay>
     </div>
   );
 }

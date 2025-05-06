@@ -5,7 +5,6 @@ import React, { useContext, useState, useCallback } from "react";
 import { ToDoContext } from "@/context/todo-context";
 import TaskChip from "./TaskChip";
 import Modal from "./Modal";
-import type { Task } from "@/types";
 
 type Category = keyof typeof CATEGORY_META;
 
@@ -28,12 +27,12 @@ function GridCard({ categories, description, detail, number }: GridCardProps) {
   const { isOver, setNodeRef } = useDroppable({
     id: categories, // Use category name as the droppable ID
   });
-  console.log(
-    "GridCard droppable ID:",
-    categories,
-    "displaying tasks:",
-    filteredTasks.length
-  );
+  // console.log(
+  //   "GridCard droppable ID:",
+  //   categories,
+  //   "displaying tasks:",
+  //   filteredTasks.length
+  // );
   // --- end droppable setup ---
 
   // Memoize the click handler
@@ -83,7 +82,9 @@ function GridCard({ categories, description, detail, number }: GridCardProps) {
   const textColorClass = `text-${colorName}-700`; // Darker text for title
 
   // Slightly change appearance when a task is dragged over
-  const dropZoneStyle = isOver ? ` scale-[1.02] bg-${colorName}-50` : "";
+  const dropZoneStyle = isOver
+    ? ` scale-[1.02] bg-${colorName}-50 ring-4 ring-${colorName}-400`
+    : "";
 
   return (
     <>
@@ -121,7 +122,7 @@ function GridCard({ categories, description, detail, number }: GridCardProps) {
         </div>
         {filteredTasks.length > 0 ? (
           <div
-            className="flex gap-2 mt-2 mb-4 flex-wrap"
+            className="flex gap-6 mt-4 mb-4 flex-wrap"
             onClick={(e) => e.stopPropagation()}
           >
             {filteredTasks.map((task) => (

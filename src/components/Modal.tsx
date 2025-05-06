@@ -97,7 +97,7 @@ export default function Modal({
           customTasks={tasks}
           customSetTasks={setTasks}
           showAddTaskForm={true}
-          isInModal={true}
+          showTitle={false}
         />
       );
     }
@@ -180,7 +180,7 @@ export default function Modal({
 
         {/* Modal Body */}
         <div
-          className="flex-1 overflow-y-auto p-6"
+          className="flex-1 p-6 overflow-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {renderContent()}

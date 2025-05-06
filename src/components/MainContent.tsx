@@ -179,8 +179,10 @@ function MainContent() {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className="min-h-screen flex flex-col bg-gray-50">
-        <Header />
+      <div className="flex flex-col h-screen bg-gray-50">
+        <div className="flex-shrink-0">
+          <Header />
+        </div>
         {showTooltip && (
           <div className="fixed top-24 left-1/2 transform -translate-x-1/2 bg-yellow-300 text-black px-6 py-3 rounded-lg shadow-lg z-50">
             <p className="text-sm">
@@ -193,8 +195,8 @@ function MainContent() {
             {lastMoveMessage}
           </div>
         )}
-        <div className="flex gap-8 px-8 py-4 w-full max-w-[1600px] mx-auto flex-1">
-          <div className="grid grid-cols-2 grid-rows-2 gap-6 flex-1 min-w-[600px]">
+        <div className="flex gap-8 px-8 pb-8 w-full max-w-[1600px] mx-auto flex-1 min-h-0">
+          <div className="grid grid-cols-2 grid-rows-2 gap-6 flex-1 min-w-[600px] overflow-auto p-2 m-2">
             {Object.entries(CATEGORY_META).map(([key, meta]) => (
               <GridCard
                 key={key}
@@ -205,10 +207,8 @@ function MainContent() {
               />
             ))}
           </div>
-          <div className="w-[600px] min-w-[400px] flex-shrink-0 h-full">
-            <div className="h-full overflow-y-auto">
-              <ToDoList activeId={activeId} overId={overId} />
-            </div>
+          <div className="w-[600px] min-w-[400px] flex-shrink-0 h-full pb-2">
+            <ToDoList activeId={activeId} overId={overId} />
           </div>
         </div>
       </div>
