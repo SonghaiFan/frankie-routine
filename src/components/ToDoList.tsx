@@ -174,7 +174,7 @@ function ToDoList({
           <div className="flex flex-col space-y-3">
             <input
               type="text"
-              className={`w-full px-6 py-3 rounded-lg bg-gray-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-${colorName}-400 text-base transition-colors`}
+              className={`w-full px-6 py-3 rounded-lg bg-gray-100 focus:bg-white focus:outline-none focus:ring-2 ${`focus:ring-${colorName}-400`} text-black`}
               value={newTaskTitle}
               onChange={(e) => setNewTaskTitle(e.target.value)}
               placeholder={`添加新${
@@ -185,14 +185,14 @@ function ToDoList({
               }}
             />
             <div className="flex gap-2 items-center">
-              <div className="flex flex-wrap gap-2 flex-1">
+              <div className="flex flex-wrap gap-2 flex-1 text-gray-700">
                 <button
                   type="button"
                   onClick={() => handleDateSelection("tonight")}
                   className={`px-3 py-2 text-sm rounded-lg ${
                     dateOption === "tonight"
                       ? `bg-${colorName}-200`
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      : "bg-gray-100 hover:bg-gray-200"
                   }`}
                 >
                   今晚
@@ -203,7 +203,7 @@ function ToDoList({
                   className={`px-3 py-2 text-sm rounded-lg ${
                     dateOption === "tomorrow"
                       ? `bg-${colorName}-200`
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      : "bg-gray-100 hover:bg-gray-200"
                   }`}
                 >
                   明天
@@ -214,7 +214,7 @@ function ToDoList({
                   className={`px-3 py-2 text-sm rounded-lg ${
                     dateOption === "3days"
                       ? `bg-${colorName}-200`
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      : "bg-gray-100 hover:bg-gray-200"
                   }`}
                 >
                   后天
@@ -225,7 +225,7 @@ function ToDoList({
                   className={`px-3 py-2 text-sm rounded-lg ${
                     dateOption === "1week"
                       ? `bg-${colorName}-200`
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      : "bg-gray-100 hover:bg-gray-200"
                   }`}
                 >
                   1周
@@ -236,7 +236,7 @@ function ToDoList({
                   className={`px-3 py-2 text-sm rounded-lg ${
                     dateOption === "2weeks"
                       ? `bg-${colorName}-200`
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      : "bg-gray-100 hover:bg-gray-200"
                   }`}
                 >
                   2周
@@ -247,7 +247,7 @@ function ToDoList({
                   className={`px-3 py-2 text-sm rounded-lg ${
                     dateOption === "1month"
                       ? `bg-${colorName}-200`
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      : "bg-gray-100 hover:bg-gray-200"
                   }`}
                 >
                   1月
@@ -258,7 +258,7 @@ function ToDoList({
                   className={`px-3 py-2 text-sm rounded-lg ${
                     dateOption === "3months"
                       ? `bg-${colorName}-200`
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      : "bg-gray-100 hover:bg-gray-200"
                   }`}
                 >
                   3月

@@ -181,7 +181,7 @@ export function BackgroundProvider({ children }: { children: ReactNode }) {
       case "day":
         // macOS day - light blue to pale cyan
         style.background =
-          "linear-gradient(135deg,rgb(214, 226, 245) 0%,rgb(237, 247, 255) 100%)";
+          "linear-gradient(135deg,rgb(247, 250, 255) 0%,rgb(249, 251, 253) 100%)";
         break;
       case "golden":
         // macOS golden hour - warm orange to light yellow

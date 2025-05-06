@@ -126,14 +126,14 @@ export default function Modal({
         {/* Modal Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-100">
           {title ? (
-            <div className="flex items-center">
+            <div className="flex items-center justify-between w-full">
               <h2 className="text-xl font-medium text-gray-800">{title}</h2>
               {category && (
-                <div className="ml-4 flex items-center">
-                  <div className="text-sm font-medium text-gray-600 mr-2">
+                <div className="flex items-center gap-4">
+                  <div className="text-sm font-medium text-gray-600">
                     {completedCount}/{tasks.length} 已完成
                   </div>
-                  <div className="w-20 h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
                     <div
                       className={`h-full ${
                         category

@@ -19,7 +19,6 @@ function TaskIndicator({
   title,
   onClick,
 }: TaskIndicatorProps) {
-  // Defensive: only use CATEGORY_META if category is valid
   let colorName = "gray";
   if (category && CATEGORY_META[category as keyof typeof CATEGORY_META]) {
     colorName = CATEGORY_META[category as keyof typeof CATEGORY_META].color;

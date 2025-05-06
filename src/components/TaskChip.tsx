@@ -8,7 +8,7 @@ import { format, isToday, isTomorrow, isYesterday, isThisWeek } from "date-fns";
 import { zhCN } from "date-fns/locale";
 import DragHandle from "./DragHandle";
 import { cn } from "@/lib/utils";
-import { useDraggable } from "@dnd-kit/core";
+import React from "react";
 
 interface TaskChipProps {
   task: Task;
@@ -75,13 +75,6 @@ export default function TaskChip({
     : "gray";
   const isSelected = selectedTaskId === task.id;
 
-  // Always call hooks at the top level, but only use their values conditionally
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: task.id,
-    data: { task },
-    disabled: !isDraggable,
-  });
-
   // If this is an overlay, use the overId to determine compact state
   const shouldBeCompact = isOverlay
     ? overId && !overId.startsWith("category-") && overId !== "todolist"
@@ -128,6 +121,43 @@ export default function TaskChip({
       })()
     : "";
 
+  // We need to still handle hiding the task when it's being dragged
+  // So let's keep a reference to the element to check if it has a child with class 'is-dragging'
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = React.useState(false);
+
+  // Listen for drag events from the DragHandle component
+  React.useEffect(() => {
+    const handleDragStart = (e: CustomEvent) => {
+      if (e.detail?.id === task.id) {
+        setIsDragging(true);
+      }
+    };
+
+    const handleDragEnd = (e: CustomEvent) => {
+      if (e.detail?.id === task.id) {
+        setIsDragging(false);
+      }
+    };
+
+    window.addEventListener(
+      "draghandle:start",
+      handleDragStart as EventListener
+    );
+    window.addEventListener("draghandle:end", handleDragEnd as EventListener);
+
+    return () => {
+      window.removeEventListener(
+        "draghandle:start",
+        handleDragStart as EventListener
+      );
+      window.removeEventListener(
+        "draghandle:end",
+        handleDragEnd as EventListener
+      );
+    };
+  }, [task.id]);
+
   // If this task is being dragged and it's not the overlay version, hide it
   if (isDragging && !isOverlay) {
     return <div className="opacity-0 h-0 overflow-hidden"></div>;
@@ -135,7 +165,7 @@ export default function TaskChip({
 
   const content = (
     <div
-      ref={isDraggable && !isOverlay ? setNodeRef : undefined}
+      ref={containerRef}
       onClick={handleClick}
       onKeyDown={(e: React.KeyboardEvent) => {
         if (["Enter", " "].includes(e.key)) {
@@ -154,7 +184,6 @@ export default function TaskChip({
         overlayStyles,
         "transition-all duration-200 ease-in-out will-change-transform touch-none"
       )}
-      {...(isDraggable && !isOverlay ? attributes : {})}
     >
       {isDraggable && !isOverlay && (
         <DragHandle
