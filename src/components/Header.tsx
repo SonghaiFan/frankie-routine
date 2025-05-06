@@ -3,6 +3,59 @@
 import { useContext } from "react";
 import { BackgroundContext } from "@/context/background-context";
 
+// SVG Icons for sunrise and sunset
+const SunriseIcon = () => (
+  <svg
+    className="w-3 h-3 mr-1 inline-block"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M12 4V2M4 12H2M6 6L4.5 4.5M18 6L19.5 4.5M22 12H20M12 8V10"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+    <path d="M4 16H20" stroke="currentColor" strokeWidth="2" />
+    <path d="M5 20H19" stroke="currentColor" strokeWidth="2" />
+    <path
+      d="M16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12"
+      stroke="currentColor"
+      strokeWidth="2"
+    />
+  </svg>
+);
+
+const SunsetIcon = () => (
+  <svg
+    className="w-3 h-3 mr-1 inline-block"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M12 10V8M4 14H2M6 8L4.5 6.5M18 8L19.5 6.5M22 14H20"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+    <path d="M4 18H20" stroke="currentColor" strokeWidth="2" />
+    <path d="M5 22H19" stroke="currentColor" strokeWidth="2" />
+    <path
+      d="M16 14C16 11.7909 14.2091 10 12 10C9.79086 10 8 11.7909 8 14"
+      stroke="currentColor"
+      strokeWidth="2"
+    />
+    <path
+      d="M12 2V4"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
 const Header = () => {
   const {
     currentTime,
@@ -121,9 +174,13 @@ const Header = () => {
             {currentTime}
           </div>
           {sunData && (
-            <div className="text-xs mt-0.5 opacity-80 font-medium space-x-2">
-              <span>🌅 {sunData.results.sunrise}</span>
-              <span>🌇 {sunData.results.sunset}</span>
+            <div className="text-xs mt-0.5 opacity-80 font-medium flex items-center justify-end gap-3">
+              <span className="flex items-center">
+                <SunriseIcon /> {sunData.results.sunrise}
+              </span>
+              <span className="flex items-center">
+                <SunsetIcon /> {sunData.results.sunset}
+              </span>
             </div>
           )}
         </div>
