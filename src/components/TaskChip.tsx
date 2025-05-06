@@ -5,6 +5,8 @@ import TaskIndicator from "./TaskIndicator";
 import { CATEGORY_META } from "@/utils/config";
 import type { Task } from "../types";
 import { ToDoContext } from "@/context/todo-context";
+import { format, isToday, isTomorrow, isYesterday, isThisWeek } from "date-fns";
+import { zhCN } from "date-fns/locale";
 
 type DraggableResult = ReturnType<typeof useDraggable> & {
   isDelayed?: boolean;
@@ -19,6 +21,44 @@ interface TaskChipProps {
   isDraggable?: boolean;
   isOverlay?: boolean;
   overCategoryId?: string | null;
+}
+
+// Helper function to format dates
+function formatDate(timestamp: number): string {
+  const date = new Date(timestamp);
+
+  if (isToday(date)) {
+    return `今天 ${format(date, "HH:mm")}`;
+  } else if (isTomorrow(date)) {
+    return `明天 ${format(date, "HH:mm")}`;
+  } else if (isYesterday(date)) {
+    return `昨天 ${format(date, "HH:mm")}`;
+  } else if (isThisWeek(date)) {
+    return format(date, "EEE HH:mm", { locale: zhCN });
+  }
+
+  return format(date, "MM月dd日 HH:mm", { locale: zhCN });
+}
+
+// Function to determine due date status
+function getDueDateStatus(
+  dueDate: number | undefined,
+  isCompleted: boolean
+): string {
+  if (!dueDate || isCompleted) return "";
+
+  const now = new Date();
+  const due = new Date(dueDate);
+
+  if (due < now) {
+    return "overdue"; // Past due
+  } else if (isToday(due)) {
+    return "today"; // Due today
+  } else if (isTomorrow(due)) {
+    return "tomorrow"; // Due tomorrow
+  }
+
+  return "";
 }
 
 export default function TaskChip({
@@ -98,6 +138,9 @@ export default function TaskChip({
       : "w-[600px] min-h-[64px] rotate-[2deg]" // Over todo list: full width with opposite tilt
     : "";
 
+  // Get due date status
+  const dueDateStatus = getDueDateStatus(task.dueDate, task.isCompleted);
+
   const content = (
     <>
       <TaskIndicator
@@ -112,14 +155,97 @@ export default function TaskChip({
       />
       {!shouldBeCompact && (
         <>
-          <span
-            className={`flex-1 text-base transition-colors ${
-              task.isCompleted ? "line-through text-gray-400" : "text-gray-900"
-            }`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {task.title}
-          </span>
+          <div className="flex-1 flex flex-col">
+            <span
+              className={`text-base transition-colors ${
+                task.isCompleted
+                  ? "line-through text-gray-400"
+                  : "text-gray-900"
+              }`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {task.title}
+            </span>
+            <div
+              className="flex items-center text-xs mt-1 space-x-3"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {task.createdAt && (
+                <span className="text-gray-500 flex items-center">
+                  <svg
+                    className="w-3 h-3 mr-1"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 8V12L15 15"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="9"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
+                  </svg>
+                  {formatDate(task.createdAt)}
+                </span>
+              )}
+              {task.dueDate && (
+                <span
+                  className={`flex items-center
+                    ${
+                      dueDateStatus === "overdue"
+                        ? "text-red-500 font-medium"
+                        : ""
+                    }
+                    ${
+                      dueDateStatus === "today"
+                        ? "text-orange-500 font-medium"
+                        : ""
+                    }
+                    ${dueDateStatus === "tomorrow" ? "text-yellow-600" : ""}
+                    ${!dueDateStatus ? "text-gray-500" : ""}
+                  `}
+                >
+                  <svg
+                    className="w-3 h-3 mr-1"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      x="3"
+                      y="4"
+                      width="18"
+                      height="18"
+                      rx="2"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
+                    <path d="M3 10H21" stroke="currentColor" strokeWidth="2" />
+                    <path
+                      d="M8 2L8 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M16 2L16 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  截止: {formatDate(task.dueDate)}
+                </span>
+              )}
+            </div>
+          </div>
           {!isOverlay && onDelete && (
             <button
               onClick={handleDelete}
@@ -172,6 +298,45 @@ export default function TaskChip({
               </span>
             )}
           </div>
+          {task.dueDate && (
+            <div
+              className={`text-xs mt-1 flex items-center gap-1.5
+              ${dueDateStatus === "overdue" ? "text-red-400" : "text-gray-300"}
+            `}
+            >
+              <svg
+                className="w-3 h-3"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  x="3"
+                  y="4"
+                  width="18"
+                  height="18"
+                  rx="2"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+                <path d="M3 10H21" stroke="currentColor" strokeWidth="2" />
+                <path
+                  d="M8 2L8 6"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M16 2L16 6"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+              {dueDateStatus === "overdue" ? "已过期: " : "截止: "}
+              {formatDate(task.dueDate)}
+            </div>
+          )}
           <div className="absolute left-1/2 -translate-x-1/2 top-full -mt-1">
             <div className="border-8 border-transparent border-t-gray-900/90" />
           </div>
