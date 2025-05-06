@@ -1,7 +1,7 @@
 "use client";
 
 import { useDraggable } from "@dnd-kit/core";
-import { forwardRef, useEffect } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 interface DragHandleProps {
@@ -29,18 +29,37 @@ const DragHandle = forwardRef<HTMLDivElement, DragHandleProps>(
       data,
     });
 
+    // Track previous dragging state to ensure events are always fired
+    const wasDraggingRef = useRef(false);
+
     // Emit custom events when drag state changes
     useEffect(() => {
-      if (isDragging) {
+      if (isDragging && !wasDraggingRef.current) {
+        // Start dragging
+        wasDraggingRef.current = true;
         window.dispatchEvent(
           new CustomEvent("draghandle:start", { detail: { id } })
         );
-      } else {
+      } else if (!isDragging && wasDraggingRef.current) {
+        // End dragging
+        wasDraggingRef.current = false;
         window.dispatchEvent(
           new CustomEvent("draghandle:end", { detail: { id } })
         );
       }
     }, [isDragging, id]);
+
+    // Ensure draghandle:end is fired when component unmounts during drag
+    useEffect(() => {
+      return () => {
+        if (wasDraggingRef.current) {
+          wasDraggingRef.current = false;
+          window.dispatchEvent(
+            new CustomEvent("draghandle:end", { detail: { id } })
+          );
+        }
+      };
+    }, [id]);
 
     return (
       <div

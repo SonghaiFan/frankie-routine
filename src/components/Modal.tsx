@@ -4,6 +4,8 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { Task } from "@/types";
 import { CATEGORY_META } from "@/utils/config";
 import ToDoList from "./ToDoList";
+import Image from "next/image";
+import { getIconFilter } from "@/lib/utils";
 
 interface ModalProps {
   isOpen: boolean;
@@ -105,6 +107,13 @@ export default function Modal({
     return children;
   };
 
+  // Get color name for styling
+  const colorName = category ? CATEGORY_META[category].color : "gray";
+  // Icon styling with color filter
+  const iconStyle = {
+    filter: category ? getIconFilter(colorName) : "none",
+  };
+
   return (
     // Backdrop
     <div
@@ -127,7 +136,21 @@ export default function Modal({
         <div className="flex items-center justify-between p-4 border-b border-gray-100">
           {title ? (
             <div className="flex items-center justify-between w-full">
-              <h2 className="text-xl font-medium text-gray-800">{title}</h2>
+              <div className="flex items-center gap-2">
+                {category && (
+                  <div className={`text-${colorName}-500`}>
+                    <Image
+                      src={CATEGORY_META[category].icon}
+                      alt={CATEGORY_META[category].label}
+                      width={24}
+                      height={24}
+                      className="mr-1"
+                      style={iconStyle}
+                    />
+                  </div>
+                )}
+                <h2 className="text-xl font-medium text-gray-800">{title}</h2>
+              </div>
               {category && (
                 <div className="flex items-center gap-4">
                   <div className="text-sm font-medium text-gray-600">

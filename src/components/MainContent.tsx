@@ -83,12 +83,28 @@ function MainContent() {
     const overTarget = over.id;
     console.log("Task being moved:", taskId, "To target:", overTarget);
 
+    // Get the current task from our state
+    const task = tasks.find((t) => t.id === taskId);
+    if (!task) {
+      console.log("Task not found:", taskId);
+      return;
+    }
+
     // Handle dropping on a category grid
     if (
       typeof overTarget === "string" &&
       (Object.keys(CATEGORY_META) as string[]).includes(overTarget)
     ) {
-      // Dropped on a category grid
+      // If dropping on the same category, we still need to trigger an update
+      // to ensure the TaskChip components reset properly
+      if (task.category === overTarget) {
+        console.log("Task dropped in the same category:", overTarget);
+        // Create a new tasks array with the same content to trigger a re-render
+        setTasks([...tasks]);
+        return;
+      }
+
+      // Dropped on a different category grid
       console.log("Moving task to category grid:", overTarget);
       setTasks((prev) =>
         prev.map((task) =>
@@ -103,6 +119,13 @@ function MainContent() {
     // Handle dropping on a category in todolist or todolist itself
     if (typeof overTarget === "string") {
       if (overTarget === "todolist") {
+        // If the task is already uncategorized, still update to reset state
+        if (task.category === undefined) {
+          console.log("Task already uncategorized, updating state");
+          setTasks([...tasks]);
+          return;
+        }
+
         // Dropped on the main todo list (uncategorize)
         console.log("Moving task to main todolist (removing category)");
         setTasks((prev) =>
@@ -116,6 +139,18 @@ function MainContent() {
           "category-",
           ""
         ) as keyof typeof CATEGORY_META;
+
+        // If dropping into the same category in the todolist
+        if (task.category === categoryName) {
+          console.log(
+            "Task dropped in the same todolist category:",
+            categoryName
+          );
+          // Create a new tasks array with the same content to trigger a re-render
+          setTasks([...tasks]);
+          return;
+        }
+
         console.log("Moving task to todolist category:", categoryName);
         setTasks((prev) =>
           prev.map((task) =>

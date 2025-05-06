@@ -1,5 +1,5 @@
 "use client";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import TaskIndicator from "./TaskIndicator";
 import { CATEGORY_META } from "@/utils/config";
 import type { Task } from "../types";
@@ -122,21 +122,31 @@ export default function TaskChip({
     : "";
 
   // We need to still handle hiding the task when it's being dragged
-  // So let's keep a reference to the element to check if it has a child with class 'is-dragging'
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = React.useState(false);
+  // Track a timeout to automatically reset dragging state
+  const dragTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   // Listen for drag events from the DragHandle component
   React.useEffect(() => {
     const handleDragStart = (e: CustomEvent) => {
       if (e.detail?.id === task.id) {
+        // Clear any existing timeout
+        if (dragTimeoutRef.current) {
+          clearTimeout(dragTimeoutRef.current);
+          dragTimeoutRef.current = null;
+        }
         setIsDragging(true);
       }
     };
 
     const handleDragEnd = (e: CustomEvent) => {
       if (e.detail?.id === task.id) {
-        setIsDragging(false);
+        // Set a short timeout before revealing the task again
+        // This ensures the UI stays consistent during quick updates
+        dragTimeoutRef.current = setTimeout(() => {
+          setIsDragging(false);
+        }, 100);
       }
     };
 
@@ -147,6 +157,7 @@ export default function TaskChip({
     window.addEventListener("draghandle:end", handleDragEnd as EventListener);
 
     return () => {
+      // Clean up event listeners and any pending timeouts
       window.removeEventListener(
         "draghandle:start",
         handleDragStart as EventListener
@@ -155,8 +166,22 @@ export default function TaskChip({
         "draghandle:end",
         handleDragEnd as EventListener
       );
+      if (dragTimeoutRef.current) {
+        clearTimeout(dragTimeoutRef.current);
+      }
     };
   }, [task.id]);
+
+  // Safety timeout: If a task is stuck in dragging state, reset after 3 seconds
+  React.useEffect(() => {
+    if (isDragging && !isOverlay) {
+      const safetyTimeout = setTimeout(() => {
+        setIsDragging(false);
+      }, 3000);
+
+      return () => clearTimeout(safetyTimeout);
+    }
+  }, [isDragging, isOverlay]);
 
   // If this task is being dragged and it's not the overlay version, hide it
   if (isDragging && !isOverlay) {

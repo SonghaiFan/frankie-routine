@@ -5,6 +5,8 @@ import React, { useContext, useState, useCallback } from "react";
 import { ToDoContext } from "@/context/todo-context";
 import TaskChip from "./TaskChip";
 import Modal from "./Modal";
+import Image from "next/image";
+import { getIconFilter } from "@/lib/utils";
 
 type Category = keyof typeof CATEGORY_META;
 
@@ -22,6 +24,11 @@ function GridCard({ categories, description, detail, number }: GridCardProps) {
 
   const categoryMeta = CATEGORY_META[categories];
   const colorName = categoryMeta.color; // e.g., 'red', 'green'
+
+  // Icon styling with color filter
+  const iconStyle = {
+    filter: getIconFilter(colorName),
+  };
 
   // --- dnd-kit droppable setup ---
   const { isOver, setNodeRef } = useDroppable({
@@ -106,7 +113,16 @@ function GridCard({ categories, description, detail, number }: GridCardProps) {
           className={`text-3xl font-bold mb-1 ${textColorClass} flex items-center gap-2`}
           onClick={(e) => e.stopPropagation()}
         >
-          <span className="text-3xl mr-1">{categoryMeta.icon}</span>
+          <div className={`text-${colorName}-500`}>
+            <Image
+              src={categoryMeta.icon}
+              alt={categoryMeta.label}
+              width={28}
+              height={28}
+              className="mr-1"
+              style={iconStyle}
+            />
+          </div>
           {categoryMeta.label}
         </div>
         <div
