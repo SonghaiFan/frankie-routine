@@ -6,7 +6,7 @@ import type { Task } from "@/types";
 const LOCAL_STORAGE_KEY_TASKS = "morningRoutineTasks";
 const LOCAL_STORAGE_KEY_CATEGORY = "morningRoutineSelectedCategory";
 
-type Category = "播种" | "收割" | "疏苗" | "风干";
+type Category = "plant" | "harvest" | "thin" | "dry";
 
 interface ToDoContextType {
   tasks: Task[];
@@ -30,7 +30,7 @@ function safelyGetStoredValue<T>(key: string, defaultValue: T): T {
     const storedValue = window.localStorage.getItem(key);
     return storedValue ? JSON.parse(storedValue) : defaultValue;
   } catch (error) {
-    console.error(`Error reading localStorage key “${key}”:`, error);
+    console.error(`Error reading localStorage key "${key}":`, error);
     return defaultValue;
   }
 }
@@ -38,7 +38,7 @@ function safelyGetStoredValue<T>(key: string, defaultValue: T): T {
 export function ToDoProvider({ children }: { children: ReactNode }) {
   // --- Initialize state with default values ONLY ---
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<Category>("播种");
+  const [selectedCategory, setSelectedCategory] = useState<Category>("plant");
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   // --- End default initialization ---
 
@@ -51,13 +51,42 @@ export function ToDoProvider({ children }: { children: ReactNode }) {
       LOCAL_STORAGE_KEY_TASKS,
       []
     );
-    const storedCategory = safelyGetStoredValue<Category>(
+
+    // Map old Chinese category names to new English names if needed
+    const updatedTasks = storedTasks.map((task) => {
+      if (!task.category) return task;
+
+      const categoryMap: Record<string, Category> = {
+        播种: "plant",
+        收割: "harvest",
+        疏苗: "thin",
+        风干: "dry",
+      };
+
+      return {
+        ...task,
+        category: (categoryMap[task.category] as Category) || task.category,
+      };
+    });
+
+    const storedCategory = safelyGetStoredValue<string>(
       LOCAL_STORAGE_KEY_CATEGORY,
-      "播种"
+      "plant"
     );
-    setTasks(storedTasks);
-    setSelectedCategory(storedCategory);
-  }, []); // Empty dependency array ensures this runs only once on mount
+
+    // Map old Chinese category names to new English names
+    const categoryMap: Record<string, Category> = {
+      播种: "plant",
+      收割: "harvest",
+      疏苗: "thin",
+      风干: "dry",
+    };
+
+    const updatedCategory = categoryMap[storedCategory] || "plant";
+
+    setTasks(updatedTasks);
+    setSelectedCategory(updatedCategory as Category);
+  }, []);
   // --- End load effect ---
 
   // --- Effects to SAVE state to localStorage ---
@@ -71,7 +100,7 @@ export function ToDoProvider({ children }: { children: ReactNode }) {
       );
     } catch (error) {
       console.error(
-        `Error setting localStorage key “${LOCAL_STORAGE_KEY_TASKS}”:`,
+        `Error setting localStorage key "${LOCAL_STORAGE_KEY_TASKS}":`,
         error
       );
     }
@@ -87,7 +116,7 @@ export function ToDoProvider({ children }: { children: ReactNode }) {
       );
     } catch (error) {
       console.error(
-        `Error setting localStorage key “${LOCAL_STORAGE_KEY_CATEGORY}”:`,
+        `Error setting localStorage key "${LOCAL_STORAGE_KEY_CATEGORY}":`,
         error
       );
     }

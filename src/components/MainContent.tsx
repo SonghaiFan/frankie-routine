@@ -48,6 +48,7 @@ function MainContent() {
 
   function handleDragStart(event: DragStartEvent) {
     setActiveId(event.active.id as number);
+    console.log("Drag started - Task ID:", event.active.id);
     // Prevent any clicks from happening during drag
     event.active.data.current = {
       ...event.active.data.current,
@@ -57,20 +58,36 @@ function MainContent() {
 
   function handleDragOver(event: DragOverEvent) {
     setOverId(event.over ? event.over.id : null);
+    console.log("Dragging over:", event.over ? event.over.id : "nothing");
   }
 
   function handleDragEnd(event: any) {
     setActiveId(null);
     setOverId(null);
+    console.log(
+      "Drag ended - Active ID:",
+      event.active.id,
+      "Over ID:",
+      event.over?.id
+    );
+
     const { active, over } = event;
-    if (!active || !over) return;
+    if (!active || !over) {
+      console.log("No active or over element in drag end");
+      return;
+    }
+
     const taskId = active.id as number;
     const overTarget = over.id;
+    console.log("Task being moved:", taskId, "To target:", overTarget);
+
+    // Handle dropping on a category grid
     if (
       typeof overTarget === "string" &&
       (Object.keys(CATEGORY_META) as string[]).includes(overTarget)
     ) {
       // Dropped on a category grid
+      console.log("Moving task to category grid:", overTarget);
       setTasks((prev) =>
         prev.map((task) =>
           task.id === taskId
@@ -80,13 +97,30 @@ function MainContent() {
       );
       return;
     }
-    if (overTarget === "todolist") {
-      // Dropped on the todo list (uncategorize)
-      setTasks((prev) =>
-        prev.map((task) =>
-          task.id === taskId ? { ...task, category: undefined } : task
-        )
-      );
+
+    // Handle dropping on a category in todolist or todolist itself
+    if (typeof overTarget === "string") {
+      if (overTarget === "todolist") {
+        // Dropped on the main todo list (uncategorize)
+        console.log("Moving task to main todolist (removing category)");
+        setTasks((prev) =>
+          prev.map((task) =>
+            task.id === taskId ? { ...task, category: undefined } : task
+          )
+        );
+      } else if (overTarget.startsWith("category-")) {
+        // Dropped on a category within a todolist
+        const categoryName = overTarget.replace(
+          "category-",
+          ""
+        ) as keyof typeof CATEGORY_META;
+        console.log("Moving task to todolist category:", categoryName);
+        setTasks((prev) =>
+          prev.map((task) =>
+            task.id === taskId ? { ...task, category: categoryName } : task
+          )
+        );
+      }
     }
   }
 

@@ -39,7 +39,11 @@ function ToDoList({
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [dueDate, setDueDate] = useState<string>("");
   const [dateOption, setDateOption] = useState<string>("");
-  const { setNodeRef, isOver } = useDroppable({ id: "todolist" });
+
+  // Set the proper droppable ID
+  const droppableId = category ? `category-${category}` : "todolist";
+  console.log("ToDoList droppable ID:", droppableId, "category:", category);
+  const { setNodeRef, isOver } = useDroppable({ id: droppableId });
 
   // Helper functions for preset dates
   const getDateForOption = (option: string): string => {
@@ -146,10 +150,6 @@ function ToDoList({
   const completedCount = filteredTasks.filter(
     (task) => task.isCompleted
   ).length;
-  const completionPercentage =
-    filteredTasks.length > 0
-      ? Math.round((completedCount / filteredTasks.length) * 100)
-      : 0;
 
   return (
     <div
@@ -368,7 +368,7 @@ function ToDoList({
                     key={task.id}
                     task={task}
                     isOverlay
-                    overCategoryId={typeof overId === "string" ? overId : null}
+                    overId={typeof overId === "string" ? overId : null}
                     className="transform transition-all duration-200 scale-105"
                   />
                 );

@@ -20,7 +20,7 @@ interface TaskChipProps {
   onToggleComplete?: (id: number) => void;
   isDraggable?: boolean;
   isOverlay?: boolean;
-  overCategoryId?: string | null;
+  overId?: string | null;
 }
 
 // Helper function to format dates
@@ -69,14 +69,22 @@ export default function TaskChip({
   onToggleComplete,
   isDraggable = true,
   isOverlay = false,
-  overCategoryId = null,
+  overId = null,
 }: TaskChipProps) {
   const { selectedTaskId, setSelectedTaskId } = useContext(ToDoContext);
   const categoryColor = CATEGORY_META[task.category!]?.color || "gray";
   const isSelected = selectedTaskId === task.id;
 
-  // If this is an overlay, use the overCategoryId to determine compact state
-  const shouldBeCompact = isOverlay ? !!overCategoryId : compact;
+  // If this is an overlay, use the overId to determine compact state - we only want compact
+  // when hovering over a category card, not when hovering over todolist or category-todolist
+  const shouldBeCompact = isOverlay
+    ? overId && !overId.startsWith("category-") && overId !== "todolist"
+    : compact;
+
+  // Then add debugging for the shouldBeCompact state
+  if (isOverlay) {
+    console.log("shouldBeCompact:", shouldBeCompact, "overId:", overId);
+  }
 
   // Setup draggable functionality
   const {
@@ -133,9 +141,27 @@ export default function TaskChip({
 
   // Determine overlay styles based on target area
   const overlayStyles = isOverlay
-    ? overCategoryId
-      ? "scale-90 min-w-[200px] rotate-[-2deg]" // Over category: compact with tilt
-      : "w-[600px] min-h-[64px] rotate-[2deg]" // Over todo list: full width with opposite tilt
+    ? (() => {
+        console.log("Overlay with overId:", overId);
+
+        // Over todolist: full width with right tilt
+        if (overId === "todolist") {
+          return "w-[600px] min-h-[64px] rotate-[2deg] bg-white/80";
+        }
+        // Over category-specific todolist: full width with no tilt
+        else if (overId && overId.startsWith("category-")) {
+          return "w-[600px] min-h-[64px] bg-white/80";
+        }
+        // Over a category card: compact with left tilt
+        else if (overId) {
+          return "scale-90 min-w-fit rotate-[-2deg] bg-white/90";
+        }
+        // Not over any droppable: standard appearance
+        else {
+          console.log("Overlay not over any droppable");
+          return "w-[600px] min-h-[64px] bg-white/60";
+        }
+      })()
     : "";
 
   // Get due date status
@@ -264,8 +290,11 @@ export default function TaskChip({
             bottom-full mb-2 bg-gray-900/90 text-white 
             px-4 py-2.5 rounded-lg text-sm whitespace-nowrap 
             shadow-xl backdrop-blur-md
-            opacity-0 scale-90 -translate-y-1
-            group-hover:opacity-100 group-hover:scale-100 group-hover:-translate-y-2
+            ${
+              isOverlay
+                ? "opacity-100 scale-100 -translate-y-2" // Always show tooltip when dragging
+                : "opacity-0 scale-90 -translate-y-1 group-hover:opacity-100 group-hover:scale-100 group-hover:-translate-y-2"
+            }
             transition-all duration-300 ease-out
             z-50
           `}
@@ -367,7 +396,11 @@ export default function TaskChip({
       bg-${categoryColor}-50
       ${isSelected ? `ring-2 ring-${categoryColor}-500 shadow-md` : ""}
       ${isDragging ? "opacity-60" : "hover:shadow-md hover:scale-[1.01]"}
-      ${isDelayed ? "scale-105 shadow-lg cursor-grabbing" : "cursor-pointer"}
+      ${
+        isDelayed
+          ? "scale-105 shadow-lg cursor-grabbing animate-shake"
+          : "cursor-pointer"
+      }
       ${isOverlay ? "shadow-xl backdrop-blur-sm bg-opacity-90" : ""}
       ${overlayStyles}
       transition-all duration-200 ease-in-out will-change-transform

@@ -28,6 +28,12 @@ function GridCard({ categories, description, detail, number }: GridCardProps) {
   const { isOver, setNodeRef } = useDroppable({
     id: categories, // Use category name as the droppable ID
   });
+  console.log(
+    "GridCard droppable ID:",
+    categories,
+    "displaying tasks:",
+    filteredTasks.length
+  );
   // --- end droppable setup ---
 
   // Memoize the click handler
