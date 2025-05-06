@@ -174,28 +174,30 @@ export function BackgroundProvider({ children }: { children: ReactNode }) {
 
     switch (timeOfDay) {
       case "dawn":
-        // macOS dawn - soft peach to pale blue
+        // Soft coral sunrise to morning mist
         style.background =
-          "linear-gradient(135deg,rgb(252, 245, 243) 0%, #E8F1F5 100%)";
+          "linear-gradient(135deg, hsl(15, 85%, 92%) 0%, hsl(210, 40%, 95%) 100%)";
         break;
       case "day":
-        // macOS day - light blue to pale cyan
+        // Airy azure to crisp white
         style.background =
-          "linear-gradient(135deg,rgb(247, 250, 255) 0%,rgb(249, 251, 253) 100%)";
+          "linear-gradient(145deg, hsl(207, 76.70%, 91.60%) 0%, hsl(0, 0%, 98%) 100%)";
         break;
       case "golden":
-        // macOS golden hour - warm orange to light yellow
+        // Apricot glow to soft vanilla
         style.background =
-          "linear-gradient(135deg,rgb(255, 240, 219) 0%,rgb(255, 249, 240) 100%)";
+          "linear-gradient(135deg, hsl(32, 100%, 92%) 0%, hsl(55, 100%, 97%) 100%)";
         break;
       case "dusk":
-        // macOS dusk - pinkish purple to lavender
-        style.background = "linear-gradient(135deg, #E2B0FF 0%, #D8DCFF 100%)";
+        // Mauve twilight to periwinkle
+        style.background =
+          "linear-gradient(135deg, hsl(280, 40%, 75%) 0%, hsl(230, 50%, 85%) 100%)";
         break;
       case "night":
-        // macOS night - deep blue to midnight blue
-        style.background = "linear-gradient(135deg, #141E30 0%, #243B55 100%)";
-        style.color = "white";
+        // Deep space blue to cosmic purple
+        style.background =
+          "linear-gradient(135deg, hsl(225, 45%, 15%) 0%, hsl(260, 35%, 25%) 100%)";
+        style.color = "hsl(0, 0%, 95%)";
         break;
     }
 

@@ -104,9 +104,9 @@ const Header = () => {
       const progress = (timeDecimal - 6) / 12; // 0 to 1 for 6am to 6pm
       xPos = -10 + progress * 120; // -10% to 110%
 
-      // Arc: y = sin(x * PI) where x goes from 0 to 1
-      // This creates a path that rises and falls
-      yPos = -50 * Math.sin(progress * Math.PI); // -50% at highest (above the header)
+      // Enhanced parabolic arc for more dramatic rise/fall
+      const normalizedProgress = progress * 2 - 1; // -1 to 1
+      yPos = -70 * (1 - normalizedProgress * normalizedProgress); // -70% at apex
     } else {
       // Night time (moon) - moves in an arc from right to left
       let progress = 0;
@@ -120,7 +120,10 @@ const Header = () => {
       }
 
       xPos = 110 - progress * 120; // 110% to -10%
-      yPos = -30 * Math.sin(progress * Math.PI); // -30% at highest (less high than sun)
+
+      // Flatter arc for moon with cubic easing
+      const normalizedProgress = progress * 2 - 1; // -1 to 1
+      yPos = -40 * Math.pow(1 - normalizedProgress * normalizedProgress, 1.5); // -40% at apex
     }
 
     return { xPos, yPos };
@@ -143,7 +146,7 @@ const Header = () => {
     // Moon
     <>
       <div className="absolute inset-0 bg-gray-200 rounded-full opacity-80 blur-sm"></div>
-      <div className="absolute inset-1 bg-gray-100 rounded-full"></div>
+      <div className="absolute inset-1 bg-yellow-50 rounded-full"></div>
       <div className="absolute right-4 top-3 w-8 h-8 bg-gray-200 rounded-full opacity-40 blur-sm"></div>
     </>
   );
@@ -162,7 +165,7 @@ const Header = () => {
       </div>
 
       {/* Title */}
-      <h1 className="text-5xl font-bold relative ml-20 tracking-tight z-10">
+      <h1 className="text-6xl font-bold relative tracking-tight z-10 absolute left-1/2 -translate-x-1/2">
         早起的黄金一小时
       </h1>
 
