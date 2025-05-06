@@ -160,7 +160,11 @@ function ToDoList({
     <div
       ref={setNodeRef}
       className={`bg-white rounded-xl flex flex-col h-full transition-all duration-300 overflow-hidden
-        ${isOver ? "ring-4 ring-offset-2 ring-yellow-400 bg-yellow-50" : ""}`}
+        ${
+          isOver
+            ? `ring-4 ring-offset-2 ring-${colorName}-400 bg-${colorName}-50`
+            : ""
+        }`}
     >
       {showAddTaskForm && (
         <div className="sticky top-0 z-10 bg-white p-8 pb-6 rounded-t-xl border-b border-gray-100 flex-shrink-0">

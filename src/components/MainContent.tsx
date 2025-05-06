@@ -12,6 +12,7 @@ import GridCard from "./GridCard";
 import ToDoList from "./ToDoList";
 import { CATEGORY_META } from "@/utils/config";
 import { ToDoContext } from "@/context/todo-context";
+import { BackgroundContext } from "@/context/background-context";
 import Header from "./Header";
 
 const ONBOARDING_KEY = "morningRoutineOnboarding";
@@ -21,6 +22,7 @@ function MainContent() {
   const [overId, setOverId] = useState<string | number | null>(null);
   const { tasks, setTasks, selectedTaskId, setSelectedTaskId } =
     useContext(ToDoContext);
+  const { bgStyle } = useContext(BackgroundContext);
   const [showTooltip, setShowTooltip] = useState(false);
   const [lastMoveMessage, setLastMoveMessage] = useState("");
 
@@ -179,7 +181,7 @@ function MainContent() {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex flex-col h-screen bg-gray-50">
+      <div className="flex flex-col h-screen" style={bgStyle}>
         <div className="flex-shrink-0">
           <Header />
         </div>
