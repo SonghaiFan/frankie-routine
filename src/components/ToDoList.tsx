@@ -1,141 +1,150 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
-import { categoriesToColorClass } from "@/utils/config";
+import React, { useState, useContext } from "react";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { ToDoContext } from "@/context/todo-context";
+import TaskChip from "./TaskChip";
+import { useDroppable, DragOverlay } from "@dnd-kit/core";
+import type { Task } from "../types";
+import { defaultDropAnimationSideEffects } from "@dnd-kit/core";
 
-interface Task {
-  id: number;
-  title: string;
-  category: "播种" | "收割" | "疏苗" | "风干";
-  isEditing: boolean;
-  isCompleted: boolean;
+interface ToDoListProps {
+  activeId?: number | null;
+  overId?: string | number | null;
 }
 
-const ToDoList: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+function ToDoList({ activeId, overId }: ToDoListProps) {
+  const { tasks, setTasks } = useContext(ToDoContext);
   const [newTaskTitle, setNewTaskTitle] = useState("");
-  const [newTaskCategory, setNewTaskCategory] = useState<
-    "播种" | "收割" | "疏苗" | "风干"
-  >("播种");
-  console.log("tasks", tasks);
+  const { setNodeRef, isOver } = useDroppable({ id: "todolist" });
 
-  const addTask = () => {
-    if (newTaskTitle) {
-      const newTask: Task = {
-        id: Date.now(), // simple unique ID
-        title: newTaskTitle,
-        category: newTaskCategory,
-        isEditing: false,
-        isCompleted: false,
-      };
-      setTasks([...tasks, newTask]);
-      setNewTaskTitle("");
+  function addTask() {
+    if (!newTaskTitle) return;
+    const newTask: Task = {
+      id: Date.now(),
+      title: newTaskTitle,
+      isCompleted: false,
+    };
+    setTasks([...tasks, newTask]);
+    setNewTaskTitle("");
+  }
+
+  function deleteTask(taskId: number) {
+    setTasks(tasks.filter((task) => task.id !== taskId));
+  }
+
+  function toggleTaskComplete(taskId: number) {
+    setTasks(
+      tasks.map((task) =>
+        task.id === taskId ? { ...task, isCompleted: !task.isCompleted } : task
+      )
+    );
+  }
+
+  // Hide the dragged task if it's over a category card
+  const uncategorizedTasks = tasks.filter((task) => {
+    if (task.category !== undefined) return false;
+    if (
+      activeId &&
+      overId &&
+      typeof overId === "string" &&
+      task.id === activeId
+    ) {
+      return false;
     }
-  };
-
-  const deleteTask = (taskId: number) => {
-    const newTasks = tasks.filter((task) => task.id !== taskId);
-    setTasks(newTasks);
-  };
-
-  const toggleEdit = (taskId: number) => {
-    const newTasks = tasks.map((task) =>
-      task.id === taskId ? { ...task, isEditing: !task.isEditing } : task
-    );
-    setTasks(newTasks);
-  };
-
-  const updateTask = (taskId: number, title: string) => {
-    if (!title) {
-      deleteTask(taskId);
-      return;
-    }
-
-    const newTasks = tasks.map((task) =>
-      task.id === taskId ? { ...task, title } : task
-    );
-    setTasks(newTasks);
-  };
-
-  const toggleCompletion = (taskId: number) => {
-    const newTasks = tasks.map((task) =>
-      task.id === taskId ? { ...task, isCompleted: !task.isCompleted } : task
-    );
-    setTasks(newTasks);
-  };
+    return true;
+  });
 
   return (
-    <div className="p-4 pt-0 border-2 border-gray-300 rounded-lg shadow-lg max-h-full overflow-auto">
-      <div className="sticky top-0 z-10 bg-white p-4">
-        <h2 className="text-xl font-bold mb-4">待办事项</h2>
-        <div className="flex gap-2 mb-4">
+    <div
+      ref={setNodeRef}
+      className={`bg-white rounded-xl flex flex-col h-full transition-all duration-300
+        ${isOver ? "ring-4 ring-offset-2 ring-yellow-400 bg-yellow-50" : ""}`}
+    >
+      <div className="sticky top-0 z-10 bg-white p-8 pb-6 rounded-t-xl border-b border-gray-100">
+        <h2 className="text-2xl font-bold mb-8 text-gray-900">待办事项</h2>
+        <div className="flex gap-3">
           <input
             type="text"
-            className="flex-1 p-2 border border-gray-300"
+            className="flex-1 px-6 py-3 rounded-lg bg-gray-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400 text-base transition-colors"
             value={newTaskTitle}
             onChange={(e) => setNewTaskTitle(e.target.value)}
-            placeholder="Add new task"
+            placeholder="添加新任务..."
+            onKeyDown={(e) => {
+              if (e.key === "Enter") addTask();
+            }}
           />
-          <select
-            className="p-2 border border-gray-300"
-            value={newTaskCategory}
-            onChange={(e) => setNewTaskCategory(e.target.value)}
-          >
-            <option value="播种">播种</option>
-            <option value="收割">收割</option>
-            <option value="疏苗">疏苗</option>
-            <option value="风干">风干</option>
-          </select>
           <button
-            className="px-4 py-2 bg-blue-500 text-white rounded"
+            className="px-8 py-3 rounded-lg bg-gray-900 text-white font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={addTask}
+            disabled={!newTaskTitle.trim()}
           >
-            Add Task
+            添加
           </button>
         </div>
       </div>
-      <ul>
-        {tasks.map((task) => (
-          <li key={task.id} className={`p-2 rounded mb-2`}>
-            <div className="flex items-center gap-2">
-              {task.isEditing ? (
-                <input
-                  type="text"
-                  className="flex-1 p-2 border border-gray-300 h-10 "
-                  value={task.title}
-                  onChange={(e) => updateTask(task.id, e.target.value)}
-                  onBlur={() => toggleEdit(task.id)}
-                  autoFocus
-                />
-              ) : (
-                <div
-                  className={`flex items-center text-${
-                    task.isCompleted
-                      ? "gray-500"
-                      : categoriesToColorClass[task.category]
-                  } h-10`}
+      <div className="flex-1 p-8 pt-4">
+        <SortableContext
+          items={uncategorizedTasks.map((t) => t.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          {uncategorizedTasks.length > 0 ? (
+            <ul className="space-y-4">
+              {uncategorizedTasks.map((task) => (
+                <li
+                  key={task.id}
+                  className="relative flex items-center group rounded-lg touch-none"
                 >
-                  <button
-                    className={`px-3 py-1 rounded`}
-                    onClick={() => toggleCompletion(task.id)}
-                  >
-                    {task.isCompleted ? "◎" : "◉"}
-                  </button>
-                  <div
-                    className={`${
-                      task.isCompleted ? "line-through text-gray-500" : ""
-                    }`}
-                    onClick={() => toggleEdit(task.id)}
-                  >
-                    {task.title}
-                  </div>
-                </div>
-              )}
+                  <TaskChip
+                    task={task}
+                    className="flex-1"
+                    onDelete={deleteTask}
+                    onToggleComplete={toggleTaskComplete}
+                  />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-48 text-gray-400">
+              <p className="text-lg mb-2">还没有待办事项</p>
+              <p className="text-sm italic">
+                添加新任务或从分类中拖动任务到这里
+              </p>
             </div>
-          </li>
-        ))}
-      </ul>
+          )}
+        </SortableContext>
+      </div>
+      <DragOverlay
+        dropAnimation={{
+          sideEffects: defaultDropAnimationSideEffects({
+            styles: {
+              active: {
+                opacity: "0.5",
+              },
+            },
+          }),
+        }}
+      >
+        {activeId != null
+          ? (() => {
+              const task = tasks.find((t) => t.id === activeId);
+              if (!task) return null;
+              return (
+                <TaskChip
+                  key={task.id}
+                  task={task}
+                  isOverlay
+                  overCategoryId={typeof overId === "string" ? overId : null}
+                  className="transform transition-all duration-200 scale-105"
+                />
+              );
+            })()
+          : null}
+      </DragOverlay>
     </div>
   );
-};
+}
 
 export default ToDoList;
