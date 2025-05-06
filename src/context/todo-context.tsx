@@ -1,7 +1,7 @@
 "use client"; // Provider needs to be a client component for useState/useEffect/localStorage
 
 import React, { createContext, useState, useEffect, ReactNode } from "react";
-import type { Task } from "@/components/ToDoList";
+import type { Task } from "@/types";
 
 const LOCAL_STORAGE_KEY_TASKS = "morningRoutineTasks";
 const LOCAL_STORAGE_KEY_CATEGORY = "morningRoutineSelectedCategory";
