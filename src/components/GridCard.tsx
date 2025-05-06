@@ -78,7 +78,7 @@ function GridCard({ categories, description, detail, number }: GridCardProps) {
   }, []);
 
   // Generate Tailwind class names based on the color
-  const bgColorClass = `bg-${colorName}-100`; // Light background
+  const bgColorClass = `bg-${colorName}-200`; // Light background
   const textColorClass = `text-${colorName}-700`; // Darker text for title
 
   // Slightly change appearance when a task is dragged over

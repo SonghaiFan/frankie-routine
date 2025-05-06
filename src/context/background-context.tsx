@@ -174,20 +174,27 @@ export function BackgroundProvider({ children }: { children: ReactNode }) {
 
     switch (timeOfDay) {
       case "dawn":
-        style.background = "linear-gradient(135deg, #ff9e9e 0%, #ffd4a9 100%)";
+        // macOS dawn - soft peach to pale blue
+        style.background =
+          "linear-gradient(135deg,rgb(252, 245, 243) 0%, #E8F1F5 100%)";
         break;
       case "day":
-        style.background = "linear-gradient(135deg, #64b3f4 0%, #c2e9fb 100%)";
+        // macOS day - light blue to pale cyan
+        style.background =
+          "linear-gradient(135deg,rgb(214, 226, 245) 0%,rgb(237, 247, 255) 100%)";
         break;
       case "golden":
-        style.background = "linear-gradient(135deg, #ffb347 0%, #ffcc33 100%)";
+        // macOS golden hour - warm orange to light yellow
+        style.background =
+          "linear-gradient(135deg,rgb(255, 240, 219) 0%,rgb(255, 249, 240) 100%)";
         break;
       case "dusk":
-        style.background = "linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%)";
+        // macOS dusk - pinkish purple to lavender
+        style.background = "linear-gradient(135deg, #E2B0FF 0%, #D8DCFF 100%)";
         break;
       case "night":
-        style.background =
-          "linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)";
+        // macOS night - deep blue to midnight blue
+        style.background = "linear-gradient(135deg, #141E30 0%, #243B55 100%)";
         style.color = "white";
         break;
     }
