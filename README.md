@@ -1,32 +1,38 @@
-![Frankie Routine — current product banner](docs/readme/banner.png)
+![Frankie Routine](docs/readme/banner.png)
 
 # Frankie Routine
 
-A visual daily-task board with draggable categories and a to-do list, stored in the current browser.
+Give everyday tasks a place, then move them as your priorities change.
 
-## Features
+[Guide](docs/guide.md) · [Run locally](#run-locally)
 
-- Create tasks and organize them between category cards and the to-do list.
-- Rearrange tasks through drag and drop.
-- Keep tasks and category preferences in local browser storage.
+## What it does
 
-## Getting started
+- Add tasks to a daily to-do list.
+- Drag tasks between priority categories and the list.
+- Keep task and category preferences in this browser.
+
+## Run locally
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Open the URL printed by Next.js (normally http://localhost:3000).
+Open the URL printed by Next.js, normally http://localhost:3000.
 
-## Project notes
+## Before you start
 
-Built with Next.js, React, TypeScript, Tailwind CSS and dnd-kit. Current state is managed in `src/context/todo-context.tsx`; browser storage is specific to the current origin.
+Tasks and category preferences are stored in browser localStorage. A different origin has its own state; the app does not automatically synchronize it.
 
-## Development
+## For developers
 
 ```sh
 npm run build
 ```
 
-Banner sources and update instructions: [README artwork](docs/readme/README.md).
+[Project guide](docs/guide.md) · [Artwork](docs/readme/README.md)
+
+---
+
+Made by [Songhai Fan](https://github.com/SonghaiFan) · A Frankie project
