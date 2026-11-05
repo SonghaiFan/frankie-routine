@@ -2,6 +2,8 @@
 
 # Frankie Routine
 
+[English](README.md) · [简体中文](README.zh-CN.md)
+
 Give everyday tasks a place, then move them as your priorities change.
 
 [Guide](docs/guide.md) · [Run locally](#run-locally)
