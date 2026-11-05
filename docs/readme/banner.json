@@ -1,0 +1,31 @@
+{
+  "title": "Routine",
+  "tagline": "Give everyday tasks a place.",
+  "category": "Life / Daily routines",
+  "layout": "screenshot",
+  "assets": [
+    {
+      "src": "assets/ui.png",
+      "fit": "contain",
+      "crop": [
+        60,
+        19,
+        1588,
+        1170
+      ],
+      "source_size": [
+        1708,
+        1245
+      ]
+    }
+  ],
+  "signature": "assets/frankie.svg",
+  "provenance": [
+    {
+      "file": "assets/ui.png",
+      "kind": "current local app screenshot",
+      "note": "Current routine quadrants and empty to-do list from a new local origin.",
+      "captured_on": "2026-11-05"
+    }
+  ]
+}

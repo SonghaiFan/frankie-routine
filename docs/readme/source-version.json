@@ -1,0 +1,14 @@
+{
+  "repository": "frankie-routine",
+  "source_commit": "a2ba9f965caaf494d7e191b6ac271e433711c8d9",
+  "captured_on": "2026-11-05",
+  "source_state": "Current local working tree; existing uncommitted app edits were included where present.",
+  "materials": [
+    {
+      "file": "assets/ui.png",
+      "kind": "current local app screenshot",
+      "note": "Current routine quadrants and empty to-do list from a new local origin.",
+      "captured_on": "2026-11-05"
+    }
+  ]
+}
