@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { Task } from "@/types";
+import type { Dispatch, SetStateAction } from "react";
+import { applyCategoryTaskChange } from "@/lib/category-tasks";
 import { CATEGORY_META } from "@/utils/config";
 import ToDoList from "./ToDoList";
 import Image from "next/image";
@@ -28,6 +30,16 @@ export default function Modal({
   tasks = [],
   setTasks,
 }: ModalProps) {
+  // ToDoList edits the visible category subset; merge that edit into current
+  // global state so another category or the inbox cannot be discarded.
+  const setCategoryTasks: Dispatch<SetStateAction<Task[]>> = useCallback(
+    (change) => {
+      if (!setTasks || !category) return;
+      setTasks((current) => applyCategoryTaskChange(current, category, change));
+    },
+    [setTasks, category]
+  );
+
   const modalRef = useRef<HTMLDivElement>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [localOpen, setLocalOpen] = useState(false);
@@ -97,7 +109,7 @@ export default function Modal({
         <ToDoList
           category={category}
           customTasks={tasks}
-          customSetTasks={setTasks}
+          customSetTasks={setCategoryTasks}
           showAddTaskForm={true}
           showTitle={false}
         />
