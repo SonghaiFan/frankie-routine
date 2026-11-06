@@ -6,7 +6,7 @@
 
 Give everyday tasks a place, then move them as your priorities change.
 
-[Guide](docs/guide.md) · [Run locally](#run-locally)
+[Introduction](https://songhaifan.github.io/frankie-routine/) · [Guide](docs/guide.md) · [Run locally](#run-locally)
 
 ## What it does
 

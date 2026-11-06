@@ -1,0 +1,49 @@
+{
+  "repository": "SonghaiFan/frankie-routine",
+  "branch": "main",
+  "pages_url": "https://songhaifan.github.io/frankie-routine/",
+  "kind": "online",
+  "app_url": "https://morning-routine-phi.vercel.app",
+  "vercel_project": "morning-routine",
+  "accent": "#9e493b",
+  "tint": "#fbf2ee",
+  "category": {
+    "en": "Everyday / Priorities",
+    "zh": "日常 / 优先级"
+  },
+  "steps": {
+    "en": [
+      "Add the things you want to do today.",
+      "Drag them into the priority categories that fit.",
+      "Reorder as the day changes and complete tasks."
+    ],
+    "zh": [
+      "加入今天想做的事情。",
+      "将任务拖入合适的优先级分类。",
+      "随当天变化重新排序并完成任务。"
+    ]
+  },
+  "media": [
+    {
+      "src": "docs/readme/assets/ui.png",
+      "caption": {
+        "en": "Current product interface and original assets.",
+        "zh": "项目真实界面或原始素材。"
+      },
+      "crop": [
+        60,
+        19,
+        1588,
+        1170
+      ],
+      "source_size": [
+        1708,
+        1245
+      ]
+    }
+  ],
+  "art_note": {
+    "en": "Current product interface and original assets.",
+    "zh": "素材来自项目当前界面与原始资源。"
+  }
+}
