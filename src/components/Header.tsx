@@ -152,10 +152,11 @@ const Header = () => {
   );
 
   return (
-    <div className="flex items-center justify-between px-8 py-6 relative  h-24">
+    <header data-routine-header className="relative isolate mx-auto grid overflow-hidden w-full max-w-[1600px] grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-3 px-4 py-4 sm:px-8 lg:min-h-[96px] lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-x-6 lg:py-5">
       {/* Celestial body (sun/moon) */}
       <div
-        className="absolute w-32 h-32 transition-all duration-1000 z-0"
+        aria-hidden="true"
+        className="pointer-events-none absolute w-32 h-32 opacity-20 transition-all duration-1000 z-0"
         style={{
           left: `${xPos}%`,
           top: `${yPos}%`,
@@ -165,23 +166,23 @@ const Header = () => {
       </div>
 
       {/* Title */}
-      <h1 className="text-6xl font-bold relative tracking-tight z-10 absolute left-1/2 -translate-x-1/2">
+      <h1 data-header-title className="relative z-10 col-span-2 row-start-1 text-center text-2xl font-bold tracking-tight whitespace-nowrap sm:text-3xl xl:text-4xl 2xl:text-5xl lg:col-span-1 lg:col-start-2">
         早起的黄金一小时
       </h1>
 
       {/* Time display and controls */}
-      <div className="flex items-center gap-4 z-10">
+      <div data-header-clock className="relative z-10 col-start-1 row-start-2 flex min-w-0 flex-wrap items-center gap-3 justify-self-start lg:row-start-1">
         {/* Time info */}
-        <div className="text-right">
-          <div className="font-mono text-2xl font-medium tracking-tight">
+        <div className="min-w-0 text-left">
+          <div className="font-mono text-xl font-medium tracking-tight tabular-nums sm:text-2xl">
             {currentTime}
           </div>
           {sunData && (
-            <div className="text-xs mt-0.5 opacity-80 font-medium flex items-center justify-end gap-3">
-              <span className="flex items-center">
+            <div className="text-xs mt-0.5 opacity-80 font-medium flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span className="flex items-center whitespace-nowrap">
                 <SunriseIcon /> {sunData.results.sunrise}
               </span>
-              <span className="flex items-center">
+              <span className="flex items-center whitespace-nowrap">
                 <SunsetIcon /> {sunData.results.sunset}
               </span>
             </div>
@@ -230,8 +231,8 @@ const Header = () => {
           </>
         )}
       </div>
-      <div style={{ textAlign: "right", color: "#666" }}><a href="https://songhaifan.github.io/frankie-routine/" aria-label="About Frankie routine" style={{ display: "inline-flex", alignItems: "center", padding: "6px", color: "inherit",  }}><span aria-hidden="true" style={{ display: "block", width: 76, height: 26, backgroundColor: "currentColor", mask: "url(/frankie-signature.svg) center / contain no-repeat", WebkitMask: "url(/frankie-signature.svg) center / contain no-repeat" }} /></a></div>
-    </div>
+      <a data-header-signature className="relative z-10 col-start-2 row-start-2 inline-flex items-center justify-self-end p-1.5 opacity-80 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 lg:col-start-3 lg:row-start-1" href="https://songhaifan.github.io/frankie-routine/" aria-label="About Frankie routine"><span aria-hidden="true" style={{ display: "block", width: 88, height: 36, backgroundColor: "currentColor", mask: "url(/frankie-signature.svg) center / contain no-repeat", WebkitMask: "url(/frankie-signature.svg) center / contain no-repeat" }} /></a>
+    </header>
   );
 };
 
