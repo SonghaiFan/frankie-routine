@@ -1,0 +1,186 @@
+{
+  "en": {
+    "headline": "Tasks, sorted by\nwhat matters.",
+    "intro": "See importance and urgency separately, then keep your tasks in four calm, color-coded spaces.",
+    "open": "Open Routine",
+    "nav": [
+      "The four spaces",
+      "First session",
+      "Screens",
+      "Storage"
+    ],
+    "concept_title": "Important and urgent are different questions.",
+    "concept": "Important work supports something you care about. Urgent work needs attention soon. The board combines those two questions, giving each combination a gardening name. These are categories you choose, not stages a task must pass through.",
+    "categories": {
+      "plant": [
+        "Plant / 播种",
+        "Important, not urgent",
+        "Make room for longer-term care, learning and relationships before they become a deadline."
+      ],
+      "harvest": [
+        "Harvest / 收割",
+        "Important and urgent",
+        "Work with a real near-term consequence, such as preparing tomorrow’s presentation."
+      ],
+      "dry": [
+        "Dry / 风干",
+        "Neither important nor urgent",
+        "Keep low-priority miscellaneous tasks visible without treating them as immediate demands."
+      ],
+      "thin": [
+        "Thin / 疏苗",
+        "Urgent, less important",
+        "Separate time-sensitive routine requests from work that matters most to you."
+      ]
+    },
+    "reference": "The urgency/importance distinction is explained in FranklinCovey’s <a href=\"https://www.franklincovey.com/courses/the-7-habits/habit-3/\">Habit 3 overview</a>. The gardening labels and board arrangement are this app’s own presentation.",
+    "demo_title": "Try the two questions",
+    "demo_intro": "For this example, decide where “Prepare tomorrow’s talk” belongs.",
+    "important": "Important to me",
+    "urgent": "Needs attention soon",
+    "demo_note": "An unsaved explainer using the app’s actual category definitions and icons. The full app lets you place tasks yourself; it does not judge their priority automatically.",
+    "features_title": "A task stays the same when its priority changes.",
+    "features": [
+      [
+        "Capture first",
+        "Add a title to the inbox on the right. A due date is optional; the date shortcuts attach a date to the task. Check the displayed date before relying on a shortcut."
+      ],
+      [
+        "Move it into context",
+        "Use the task’s drag handle to move it to a category. Drag it back to the inbox when you want to leave its category undecided. The board uses compact markers; hover to see their titles and details."
+      ],
+      [
+        "Open a category",
+        "Click the empty card background to open a larger list, add directly to that category and see its completion count. Category edits preserve the other categories and the inbox."
+      ],
+      [
+        "Finish or remove",
+        "Use the task indicator to mark completion. In the full list, the delete control removes a task. Completed items remain visible until removed."
+      ]
+    ],
+    "workflow_title": "Your first session",
+    "steps": [
+      [
+        "Write one task",
+        "Use the 添加新任务… field and 添加 button. Start with something specific enough to do."
+      ],
+      [
+        "Choose a space",
+        "Ask whether it matters to you and whether it needs attention soon. Drag the task into the corresponding card."
+      ],
+      [
+        "Revisit the choice",
+        "A deadline or your priorities may change. Move the task again, then mark it complete when finished."
+      ]
+    ],
+    "gallery_title": "Inside the current app",
+    "captions": [
+      "The released board, with its original category names and colors.",
+      "A real walkthrough using clearly labelled sample tasks.",
+      "The category’s expanded list and task controls."
+    ],
+    "limits_title": "Dates are labels, not a reminder service.",
+    "limits": "The app records due dates and highlights their status. It does not schedule notifications, repeat tasks every morning, or provide a calendar service. The clock and changing sky are part of the workspace’s atmosphere.",
+    "storage_title": "Local tasks, no account.",
+    "storage": "Task records and category preferences are kept in this browser’s local storage. Another browser or app address has a separate copy. There is no account sync or built-in JSON backup in the current interface; clearing site data can remove the records.",
+    "location": "The app may ask for location to look up sunrise and sunset times for the backdrop. The task board does not need that permission; the current code uses a default location when it is unavailable. This introduction never requests location.",
+    "run": "Run locally",
+    "run_note": "Install dependencies and use the address printed by Next.js. The task flow needs no AI key or account; the sunrise/sunset lookup is a separate external request.",
+    "guide": "Screenshot & content maintenance guide",
+    "source": "Source code",
+    "footer": "A Frankie project by Songhai Fan",
+    "skip": "Skip to content"
+  },
+  "zh": {
+    "headline": "分清轻重缓急，\n再开始今天。",
+    "intro": "分开看重要性与紧迫性，再把任务放进四个安静、清楚的分类空间。",
+    "open": "打开 Routine",
+    "nav": [
+      "四种空间",
+      "第一次使用",
+      "真实界面",
+      "存储"
+    ],
+    "concept_title": "重要和紧急，是两个不同的问题。",
+    "concept": "重要的事，关系到你在意的目标；紧急的事，需要尽快处理。应用用园艺中的四个名字表示这两种判断的组合。它们是你选择的分类，不是任务必须依次经历的阶段。",
+    "categories": {
+      "plant": [
+        "播种 / Plant",
+        "不紧急但重要",
+        "提前给长期的健康、学习与重要关系留出空间。"
+      ],
+      "harvest": [
+        "收割 / Harvest",
+        "紧急且重要",
+        "处理有实际近期后果的工作，例如准备明天的演讲。"
+      ],
+      "dry": [
+        "风干 / Dry",
+        "不重要也不紧急",
+        "让低优先级的杂事有地方存放，不必都当作眼下的要求。"
+      ],
+      "thin": [
+        "疏苗 / Thin",
+        "紧急但不重要",
+        "把需要及时处理的日常请求，与对自己更重要的事分开。"
+      ]
+    },
+    "reference": "紧迫性与重要性的区分，可参阅 FranklinCovey 的 <a href=\"https://www.franklincovey.com/courses/the-7-habits/habit-3/\">Habit 3 介绍</a>。园艺名称与卡片排列是这个应用自己的呈现方式。",
+    "demo_title": "试试这两个问题",
+    "demo_intro": "以“准备明天的演讲”为例，想一想应该放在哪里。",
+    "important": "对我很重要",
+    "urgent": "需要尽快处理",
+    "demo_note": "这是采用真实分类定义与图标的小演示，不保存内容。完整应用由你手动分类，不会自动判断任务的重要性。",
+    "features_title": "优先级变了，任务本身还在。",
+    "features": [
+      [
+        "先记下来",
+        "在右侧待办事项输入标题。截止日期是可选项，日期快捷按钮会给任务附上日期。 使用快捷日期后，请核对任务实际显示的日期。"
+      ],
+      [
+        "拖到合适的地方",
+        "使用任务的拖动手柄，把它移入分类。还没想好时，可以再拖回待办事项，暂时不分类。 面板中使用紧凑的任务标记，悬停可以看到标题与细节。"
+      ],
+      [
+        "展开一个分类",
+        "点击卡片空白背景，打开更大的列表，直接添加分类任务并查看完成数量。分类中的修改会保留其他分类与待办事项。"
+      ],
+      [
+        "完成或删除",
+        "点击任务指示图标标记完成。在完整列表中，删除按钮会移除任务；已完成项目在删除前仍然保留。"
+      ]
+    ],
+    "workflow_title": "第一次使用",
+    "steps": [
+      [
+        "写下一件事",
+        "在“添加新任务…”里输入内容，再点“添加”。从一件具体、可以执行的事情开始。"
+      ],
+      [
+        "选一个空间",
+        "分别问自己它是否重要、是否需要尽快处理，再拖到对应的卡片中。"
+      ],
+      [
+        "随情况重新判断",
+        "期限和优先级都可能变化。需要时再次移动任务，做完后标记完成。"
+      ]
+    ],
+    "gallery_title": "当前应用中的界面",
+    "captions": [
+      "已发布的四分类面板，保留原有名称与颜色。",
+      "使用明确标注的示例任务进行真实操作。",
+      "分类展开后的列表与任务控件。"
+    ],
+    "limits_title": "日期是任务标记，不是提醒服务。",
+    "limits": "应用记录截止日期，并突出显示到期状态。当前界面不提供通知、每日重复任务或日历服务。时钟与随日光变化的天空背景属于工作区氛围。",
+    "storage_title": "本地任务，无需账号。",
+    "storage": "任务与分类偏好保存在当前浏览器的本地存储中。另一浏览器或应用地址拥有各自独立的记录。当前界面没有账号同步或内置 JSON 备份，清理网站数据可能移除这些记录。",
+    "location": "应用可能请求位置，用于查询背景所需的日出日落时间。任务面板不需要这一权限；当前源码会在无法获取位置时使用默认地点。这个介绍页本身不会请求位置。",
+    "run": "本地运行",
+    "run_note": "安装依赖后，打开 Next.js 打印的地址。任务流程不需要 AI key 或账号；日出日落查询是独立的外部请求。",
+    "guide": "截图与内容维护指南",
+    "source": "源代码",
+    "footer": "由 Songhai Fan 制作的 Frankie 系列项目",
+    "skip": "跳至内容"
+  }
+}

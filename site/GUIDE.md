@@ -1,46 +1,59 @@
-# Introduction page maintenance / 介绍页维护
+# Routine introduction maintenance / Routine 介绍页维护
 
-[English README](../README.md) · [中文 README](../README.zh-CN.md)
+The introduction is an independent English-first static page, with Chinese at `zh/`. It uses the real app’s daytime blue wash, white rounded panels, and red/green/gray/blue category semantics. It does not request geolocation, read app storage, or load the Next.js app.
 
-## Two destinations / 两个入口
+介绍页独立构建；英文在根目录，中文在 `zh/`。沿用真实应用的日间蓝色背景、白色圆角卡片与分类颜色，不请求位置，也不读取任务存储。
 
-- Introduction / 介绍页: https://songhaifan.github.io/frankie-routine/
-- App / 应用: https://morning-routine-phi.vercel.app
-- The introduction is a standalone static site. It never builds the app or reads environment files. / 介绍页独立构建，不构建应用，也不读取环境变量文件。
-- English is the default; `zh/` is the Chinese version. / 英文默认，中文位于 `zh/`。
+## Content and actual rules / 内容与真实规则
 
-## Files to update / 更新哪些文件
+- Edit both languages in `site/content.json`. Keep labels and feature claims aligned with released code rather than README summaries.
+- `src/utils/config.ts` owns the four category labels, icon paths and descriptions. `site/build.py` reads them directly and copies `public/{plant,harvest,dry,thin}.png` into the output. Update the explanatory translations in `content.json` if these meanings change.
+- `site/demo.js` is an explicitly unsaved two-question explainer. It chooses a source-defined category; it is not the full task board, a saved task editor or an automatic priority judgement.
+- `ToDoList.tsx`, `TaskChip.tsx`, `GridCard.tsx` and `Modal.tsx` own actual task interactions. No title editor, notification scheduler, recurring-task engine, account sync or JSON backup is currently exposed. Do not add those claims based on the product name.
+- Deadline shortcuts attach dates. Verify the date shown by the actual task before documenting a specific preset time; the existing timezone conversion is not changed by this intro work.
+- `BackgroundProvider` in `src/context/background-context.tsx` requests location for external sunrise/sunset data and uses a default location if denied. A changing backdrop does not imply reminders or a timer.
 
-| Source / 来源 | What it shows / 内容 |
-| --- | --- |
-| `docs/readme/assets/ui.png` | Current product interface and original assets. |
+更新双语内容时核对实际行为，不把名称中的“一小时”写成计时器，也不暗示支持每日重复任务或提醒。
 
-- `../README.md` and `../README.zh-CN.md`: product introduction, features, setup, limitations and developer commands. Update both languages together. / 同步维护双语介绍、功能、运行步骤与限制。
-- `project.json`: app URL, repository, category, colors, three user steps and the ordered media list. / 应用链接、仓库、分类、颜色、使用步骤与有序素材列表。
-- `style.css`: this app's visual treatment within the shared layout. / 统一结构下的项目视觉风格。
-- `build.py`: portable standard-library renderer. / 可独立使用的 Python 标准库构建器。
+## Screenshot replacement map / 截图替换表
 
-## Replacing screenshots and GIFs / 替换截图和动图
+| Asset | Replace when | Owning UI |
+| --- | --- | --- |
+| `site/assets/board-current.png` | Board layout, category copy, header or sky changes | `Header.tsx`, `MainContent.tsx`, `GridCard.tsx`, `background-context.tsx` |
+| `site/assets/tasks-current.png` | Compact markers, inbox, completion or task controls change | `TaskChip.tsx`, `TaskIndicator.tsx`, `ToDoList.tsx` |
+| `site/assets/category-current.png` | Expanded list, add form or completion summary changes | `Modal.tsx`, `ToDoList.tsx` |
+| `public/plant.png`, `harvest.png`, `dry.png`, `thin.png` | Botanical marks change | `CATEGORY_META` icon paths |
+| `docs/readme/banner.png` | Approved banner is refreshed | Copied to `media/banner.png` for Open Graph |
+| `docs/readme/assets/frankie.svg` | Approved signature changes | Intro header |
 
-1. Run the current app and capture real, settled UI. Use synthetic or guest data; hide credentials and private content. For GIFs, record a real interaction from start to finish, rather than animating a static screenshot. / 运行当前版本，使用访客或示例数据采集稳定画面；GIF 应录制真实操作，不把静态图伪装成操作录像。
-2. Replace the corresponding source file above when its screen changes. These banner assets are shared with the README; replacing them may update both the banner and this page. Keep `docs/readme/source-version.json` and banner provenance accurate. / 界面变化后替换对应文件；共享素材会同时影响 banner，需同步更新来源记录。
-3. For a new screen or GIF, add it under `site/assets/` and add an entry to `project.json` → `media` with `src`, bilingual `caption`, and optionally `captured_on` / `source_revision`. The first item is the hero; the full list is the gallery. Use a GIF's first frame as an informative resting frame, keep files small, and provide a still alternative. / 新素材放到 `site/assets/`，登记双语说明、采集时间和版本；第一项为主图，其余进入画廊。GIF 应有可读首帧并保留静态替代图。
-4. If app behavior changes, update both READMEs and both `steps` arrays. Native screenshots and shared family artwork must be labelled honestly. / 行为变化时同步更新双语 README 和使用步骤；区分原生截图与系列共享素材。
-5. Build and inspect desktop and mobile, in both languages. Check the app link and every image. / 构建后检查桌面、手机和两种语言，验证链接与所有图片。
+All three new screenshots are real captures of the released application, using an initially empty browser archive and clearly labelled `Sample:` tasks. No private task content is included. The hero uses a CSS crop of the full screenshot; do not replace it with a simulated board. The app’s compact markers reveal titles on hover. Keep full source images and adjust `.hero-screen img` crop if the layout changes.
+
+使用真实、稳定后的界面，录入明确标为 Sample 的无隐私示例。不要读取或覆盖已有个人任务。若浏览器出现位置权限提示，由用户处理，介绍页采集不需要同意定位。调整 CSS 裁切，不重绘假界面。
+
+## Category update safety / 分类更新的安全性
+
+`src/lib/category-tasks.ts` applies a category-list change to the latest whole task array. `Modal.tsx` uses it through a functional React state update. Other categories and uncategorized tasks must retain their values and references. When changing the dialog or task setter, run:
 
 ```sh
-python3 site/build.py
-python3 -m http.server 8080 --directory _site --bind 127.0.0.1
+node --test scripts/test-category-tasks.mjs
 ```
 
-Open http://127.0.0.1:8080/ and http://127.0.0.1:8080/zh/.
+The tests exercise actual production code for completion, add, deletion, empty categories, functional updates and unrelated concurrent records. Also use three harmless tasks in different places in the real browser: complete/add/delete inside one category and verify the other category plus inbox remain intact after each action and reload.
 
-## Publishing / 发布
+分类内操作必须保留其他分类与未分类任务。改动状态更新方式时，运行回归测试，并在真实浏览器使用无隐私的跨分类示例验证。
 
-Push the reviewed page changes to `main`. `.github/workflows/pages.yml` publishes only `_site/` to GitHub Pages. App deployment remains separate on Vercel for browser apps; API services and native/local apps retain their own runtime. Never include `.env` files or unrelated work in a page commit. / 推送审核后的页面改动到 `main`，工作流只发布 `_site/`；应用与 API 的部署分别管理，勿提交环境变量文件或其他未完成代码。
+## Build and verify / 构建与检查
 
-If the branch or repository owner changes, update `project.json`, the workflow branch and README introduction links. / 分支或仓库所有者变化时，同步修改配置、工作流与介绍页链接。
+```sh
+python3 site/build.py --out _site
+python3 -m http.server 8080 --bind 127.0.0.1 --directory _site
+node --check site/demo.js
+```
 
-## App signature / 应用签名
+Open `/` and `/zh/` on desktop and at 390px width. Try all four important/urgent combinations, check the correct name/icon/explanation appears, and verify all images after scrolling. Check keyboard focus, readable contrast, one-line desktop navigation and no horizontal overflow. The intro’s fixed daylight theme matches one real app state; it does not simulate location-based sky calculations.
 
-The app signature uses `public/frankie-signature.svg`, copied from the approved `docs/readme/assets/frankie.svg`. It links to this introduction page. / 应用签名使用已确认的系列 SVG，并链接到介绍页。
+## Release separation / 区分本次改动与其他代码
+
+Only commit reviewed introduction files and explicit task-preservation fix files. Three unrelated pre-existing working edits existed during this audit: `src/app/layout.tsx`, `src/components/MainContent.tsx`, `src/context/todo-context.tsx`. They were read for context but left byte-for-byte intact. The production app fix is verified in an isolated clean `HEAD` archive with only reviewed files overlaid; do not deploy a local working directory that silently includes those edits.
+
+Pages uses `.github/workflows/pages.yml` and watches site files plus the actual category/icon sources. Push `main` to publish the introduction. App deployment is separate; confirm its Vercel release before claiming a runtime bug fixed online. Never commit environment files or private browser data.

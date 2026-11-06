@@ -2,7 +2,7 @@ name: Deploy app introduction
 on:
   push:
     branches: [main]
-    paths: ['site/**', 'README.md', 'README.zh-CN.md', 'docs/readme/assets/**', '.github/workflows/pages.yml']
+    paths: ['site/**', 'src/utils/config.ts', 'public/plant.png', 'public/harvest.png', 'public/dry.png', 'public/thin.png', 'docs/readme/banner.png', 'README.md', 'README.zh-CN.md', 'docs/readme/assets/**', '.github/workflows/pages.yml']
   workflow_dispatch:
 permissions:
   contents: read
