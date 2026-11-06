@@ -230,6 +230,7 @@ const Header = () => {
           </>
         )}
       </div>
+      <div style={{ textAlign: "right", color: "#666" }}><a href="https://songhaifan.github.io/frankie-routine/" aria-label="About Frankie routine" style={{ display: "inline-flex", alignItems: "center", padding: "6px", color: "inherit",  }}><span aria-hidden="true" style={{ display: "block", width: 76, height: 26, backgroundColor: "currentColor", mask: "url(/frankie-signature.svg) center / contain no-repeat", WebkitMask: "url(/frankie-signature.svg) center / contain no-repeat" }} /></a></div>
     </div>
   );
 };
